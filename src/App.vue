@@ -1,31 +1,35 @@
 <template>
-  <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
-    </div>
-    <router-view/>
-  </div>
+  <v-app>
+    <v-toolbar app color="orange darken-1">
+      <v-toolbar-title class="headline text-uppercase">
+        <span>IQDashboard</span>
+      </v-toolbar-title>
+      <v-spacer></v-spacer>
+    </v-toolbar>
+    <v-content>
+        <v-container
+            fluid
+        >
+                <v-fade-transition mode="out-in">
+                    <router-view/>
+                </v-fade-transition>
+        </v-container>
+    </v-content>
+  </v-app>
 </template>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
+<script>
+import HelloWorld from './components/HelloWorld'
 
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+export default {
+  name: 'App',
+  components: {
+    HelloWorld
+  },
+  data () {
+    return {
+      //
+    }
+  }
 }
-
-#nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+</script>
