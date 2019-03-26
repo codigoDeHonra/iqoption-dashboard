@@ -8,6 +8,13 @@
                         <div>
                             <div class="headline">Banca Inicial</div>
                             <span>{{getDashboard.banca.total}}</span>
+
+                            <v-text-field
+                                placeholder="1000"
+                                box
+                                v-model="initialInvestiment"
+                            ></v-text-field>
+
                         </div>
                     </v-card-title>
                 </v-card>
@@ -16,8 +23,23 @@
                 <v-card color="" class="">
                     <v-card-title primary-title>
                         <div>
-                            <div class="headline">Banca Total</div>
-                            <span>{{getDashboard.banca.total}}</span>
+                            <div class="headline">Entrada</div>
+                            <span>{{entry.toFixed(2)}}</span>
+                            <v-text-field
+                                placeholder="1000"
+                                box
+                                v-model="fixedInvestiment"
+                            ></v-text-field>
+                        </div>
+                    </v-card-title>
+                </v-card>
+            </v-flex>
+            <v-flex >
+                <v-card color="" class="">
+                    <v-card-title primary-title>
+                        <div>
+                            <div class="headline">Banca Atual</div>
+                            <span>{{currentInvestiment.toFixed(2)}}</span>
                         </div>
                     </v-card-title>
                 </v-card>
@@ -29,28 +51,18 @@
                 <v-card color="" class="">
                     <v-card-title primary-title>
                         <div>
-                            <div class="headline">Ganhos</div>
-                            <span>{{getDashboard.banca.total}}</span>
-                        </div>
-                    </v-card-title>
-                </v-card>
-            </v-flex>
-            <v-flex>
-                <v-card color="" class="">
-                    <v-card-title primary-title>
-                        <div>
-                            <div class="headline">Perdas</div>
-                            <span>{{getDashboard.banca.total}}</span>
+                            <div class="headline">Ganhos/Perdas</div>
+                            <span>{{pnl().toFixed(2)}}</span>
                         </div>
                     </v-card-title>
                 </v-card>
             </v-flex>
         </v-layout>
 
+        <v-btn color="primary" dark class="mb-2" @click="openInsertModal()">Nova Negociação</v-btn>
+        <v-btn color="" dark class="mb-2" @click="removeTrades()">Apagar tudo</v-btn>
+
         <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on }">
-                <v-btn color="primary" dark class="mb-2" v-on="on">Nova Negociação</v-btn>
-            </template>
             <v-card>
                 <v-card-title>
                     <span class="headline">Operação</span>
@@ -113,8 +125,9 @@
 
                 <v-card-actions>
                     <v-spacer></v-spacer>
-                    <v-btn color="blue darken-1" flat @click="close">Cancel</v-btn>
-                    <v-btn color="blue darken-1" flat @click="save">Save</v-btn>
+                    <v-btn color="blue darken-1" flat @click="close()">Cancelar</v-btn>
+                    <v-btn v-if="!modalUpdate" color="blue darken-1" flat @click="save()">Salvar</v-btn>
+                    <v-btn v-if="modalUpdate" color="blue darken-1" flat @click="update()">Atualizar</v-btn>
                 </v-card-actions>
             </v-card>
         </v-dialog>
@@ -123,27 +136,32 @@
             :headers="headers"
             :items="getDashboard.trades"
             class="elevation-1"
+            :must-sort="true"
         >
-            <template v-slot:items="props">
-                <td>{{ props.item.date }}</td>
-                <td class="">{{ props.item.asset }}</td>
-                <td class="">{{ props.item.investiment }}</td>
-                <td class="">{{ props.item.total }}</td>
-                <td class="justify-center layout px-0">
-                    <v-icon
-                        small
-                        class="mr-2"
-                        @click="editItem(props.item)"
-                    >
-                        edit
-                    </v-icon>
-                    <v-icon
-                        small
-                        @click="deleteItem(props.item)"
-                    >
-                        delete
-                    </v-icon>
-                </td>
+            <template  v-slot:items="props">
+                <tr :class="[props.item.payout > 0 ? 'green': 'red', 'accent-1']">
+                    <td>{{ props.index +1}}</td>
+                    <td>{{ props.item.date | dateFormat}}</td>
+                    <td class="">{{ props.item.asset }}</td>
+                    <td class="">{{ props.item.investiment }}</td>
+                    <td class="">{{ props.item.payout }}</td>
+                    <td class="">{{ total(props.item).toFixed(2) }}</td>
+                    <td class="justify-center layout px-0">
+                        <v-icon
+                            small
+                            class="mr-2"
+                            @click="openUpdateModal(props.item)"
+                        >
+                            edit
+                        </v-icon>
+                        <v-icon
+                            small
+                            @click="deleteItem(props.item)"
+                        >
+                            delete
+                        </v-icon>
+                    </td>
+                </tr>
             </template>
         </v-data-table>
         </v-container>
@@ -152,23 +170,45 @@
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
+  import moment from 'moment';
 
   export default {
+    name: 'Dashboard',
     data(){
       return {
+          fixedInvestiment: 2,
+          initialInvestiment: 0.0,
           dialog: false,
+          modalUpdate: false,
           headers:[
               {
-                  text: 'data',value: 'date'
+                  text: '#',
+                  sortable: false
               },
               {
-                  text: 'asset', value: 'asset'
+                  text: 'data',
+                  value: 'date',
+                  sortable: true
               },
               {
-                  text: 'invesment', value: 'invesment'
+                  text: 'asset',
+                  value: 'asset',
+                  sortable: false
               },
               {
-                  text: 'total', value: 'total'
+                  text: 'invesment',
+                  value: 'invesment',
+                  sortable: false
+              },
+              {
+                  text: 'payout',
+                  value: 'payout',
+                  sortable: false
+              },
+              {
+                  text: 'total',
+                  value: 'total',
+                  sortable: false
               },
           ],
           editedIndex: -1,
@@ -178,56 +218,93 @@
               asset: '',
               investiment: 0,
           },
-          defaultItem: {
-              name: '',
-              calories: 0,
-              fat: 0,
-              carbs: 0,
-              protein: 0
+          defaultTrade: {
+              date: new Date().toISOString().substr(0, 10),
+              payout: 0,
+              asset: '',
+              investiment: 0,
           },
-          pairs:['EUR/USD'],
+          pairs:['EUR/USD', 'USD/CHF'],
           date: new Date().toISOString().substr(0, 10),
           menu: false,
           modal: false,
           menu2: false
       }
     },
+      filters: {
+        dateFormat: function (value) {
+            moment.locale('pt-br')
+            return moment(value).format('DD-MM-YYYY')
+          }
+      },
+    mounted(){
+    },
     methods:{
         ...mapActions({
             removeAction: 'dashboard/removeAction',
-            insertAction: 'dashboard/insertAction'
+            updateAction: 'dashboard/updateAction',
+            insertAction: 'dashboard/insertAction',
+            removeAllAction: 'dashboard/removeAllAction'
         }),
-        editItem (item) {
-            this.editedIndex = this.desserts.indexOf(item)
-            this.editedItem = Object.assign({}, item)
+        openInsertModal () {
+            this.modalUpdate = false
             this.dialog = true
         },
+        openUpdateModal (item) {
+            this.modalUpdate = true
+            const index = this.getDashboard.trades.indexOf(item)
+            this.trade = this.getDashboard.trades[index]
+            this.trade.index = index
 
+            this.dialog = true
+        },
         deleteItem (item) {
             const index = this.getDashboard.trades.indexOf(item)
             confirm('Tem certeza?') && this.removeAction(index)
         },
-
         close () {
+            this.trade = Object.assign({}, this.defaultTrade)
             this.dialog = false
-            setTimeout(() => {
-                this.editedItem = Object.assign({}, this.defaultItem)
-                this.editedIndex = -1
-            }, 300)
         },
-
         save () {
-
             this.insertAction(this.trade)
-
+            this.trade = Object.assign({}, this.defaultTrade)
+            this.dialog = false
             this.close()
+            this.modalUpdate = false
+        },
+        update () {
+            this.updateAction(this.trade)
+            this.close()
+            this.modalUpdate = false
+        },
+        total (trade) {
+            const total = parseFloat(trade.investiment) *( parseFloat(trade.payout) / 100)
 
+            return total
+        },
+        pnl () {
+
+            const pnl = this.getDashboard.trades.reduce(function(acc, value) {
+                return acc + (parseFloat(value.investiment) * ( parseFloat(value.payout) / 100))
+            }, 0)
+
+            return pnl
+        },
+        removeTrades() {
+            this.removeAllAction()
         }
     },
     computed:{
         ...mapGetters({
             getDashboard: 'dashboard/getDashboard',
-        })
+        }),
+        currentInvestiment(){
+            return this.pnl() + parseFloat(this.initialInvestiment)
+        },
+        entry(){
+            return this.initialInvestiment * (this.fixedInvestiment/100)
+        }
     }
   }
 </script>

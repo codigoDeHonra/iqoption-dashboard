@@ -1,4 +1,5 @@
 export const SET_EVENTO = 'SET_EVENTO'
-export const UPDATE_EVENTO = 'UPDATE_EVENTO'
+export const UPDATE_TRADE = 'UPDATE_TRADE'
 export const REMOVE_TRADE = 'REMOVE_TRADE'
 export const INSERT_TRADE = 'INSERT_TRADE'
+export const REMOVE_ALL_TRADES = 'REMOVE_ALL_TRADES'
