@@ -6,11 +6,10 @@
                 <v-card color="" class="">
                     <v-card-title primary-title>
                         <div>
-                            <div class="headline">Banca Inicial</div>
-                            <span>{{getDashboard.banca.total}}</span>
-
+                            <div class="headline">Investimento Inicial</div>
                             <v-text-field
-                                placeholder="1000"
+                                label="Investimento Inicial"
+                                placeholder="100"
                                 box
                                 v-model="initialInvestiment"
                             ></v-text-field>
@@ -23,12 +22,20 @@
                 <v-card color="" class="">
                     <v-card-title primary-title>
                         <div>
-                            <div class="headline">Entrada</div>
-                            <span>{{entry.toFixed(2)}}</span>
+                            <div class="headline">Entrada: {{entry.toFixed(2)}}</div>
                             <v-text-field
+                                label="Entrada Padrão"
                                 placeholder="1000"
                                 box
                                 v-model="fixedInvestiment"
+                                append-icon="fas fa-percent"
+                            ></v-text-field>
+                            <v-text-field
+                                label="Payout Padrão"
+                                placeholder="1000"
+                                box
+                                v-model="fixedPayout"
+                                append-icon="fas fa-percent"
                             ></v-text-field>
                         </div>
                     </v-card-title>
@@ -38,21 +45,18 @@
                 <v-card color="" class="">
                     <v-card-title primary-title>
                         <div>
-                            <div class="headline">Banca Atual</div>
-                            <span>{{currentInvestiment.toFixed(2)}}</span>
+                            <div class="headline">Investimento Atual</div>
+                            <span class="display-3">{{currentInvestiment.toFixed(2)}}</span>
                         </div>
                     </v-card-title>
                 </v-card>
             </v-flex>
-        </v-layout>
-
-        <v-layout align-center justify-center row >
             <v-flex>
-                <v-card color="" class="">
+                <v-card :color="(pnl() >= 0) ? 'green accent-1' : 'red accent-1'">
                     <v-card-title primary-title>
                         <div>
                             <div class="headline">Ganhos/Perdas</div>
-                            <span>{{pnl().toFixed(2)}}</span>
+                            <span class="display-3">{{pnl().toFixed(2)}}</span>
                         </div>
                     </v-card-title>
                 </v-card>
@@ -121,6 +125,8 @@
                             v-model="trade.investiment"
                         ></v-text-field>
                     </v-flex>
+
+                    {{total(trade).toFixed(2) }}
                 </v-card-text>
 
                 <v-card-actions>
@@ -140,12 +146,12 @@
         >
             <template  v-slot:items="props">
                 <tr :class="[props.item.payout > 0 ? 'green': 'red', 'accent-1']">
-                    <td>{{ props.index +1}}</td>
-                    <td>{{ props.item.date | dateFormat}}</td>
-                    <td class="">{{ props.item.asset }}</td>
-                    <td class="">{{ props.item.investiment }}</td>
-                    <td class="">{{ props.item.payout }}</td>
-                    <td class="">{{ total(props.item).toFixed(2) }}</td>
+                    <td class="text-xs-left">{{ props.index +1}}</td>
+                    <td class="text-xs-left">{{ props.item.date | dateFormat}}</td>
+                    <td class="text-xs-left">{{ props.item.asset }}</td>
+                    <td class="text-xs-right">{{ props.item.investiment }}</td>
+                    <td class="text-xs-right">{{ props.item.payout }}</td>
+                    <td class="justify-center ">{{ total(props.item).toFixed(2) }}</td>
                     <td class="justify-center layout px-0">
                         <v-icon
                             small
@@ -176,14 +182,16 @@
     name: 'Dashboard',
     data(){
       return {
+          fixedPayout: 0.0,
           fixedInvestiment: 2,
-          initialInvestiment: 0.0,
+          initialInvestiment: 100.0,
           dialog: false,
           modalUpdate: false,
           headers:[
               {
                   text: '#',
-                  sortable: false
+                  sortable: false,
+                  align: 'left'
               },
               {
                   text: 'data',
@@ -220,9 +228,9 @@
           },
           defaultTrade: {
               date: new Date().toISOString().substr(0, 10),
-              payout: 0,
+              payout: this.fixedPayout,
               asset: '',
-              investiment: 0,
+              investiment: this.entry,
           },
           pairs:['EUR/USD', 'USD/CHF'],
           date: new Date().toISOString().substr(0, 10),
@@ -231,12 +239,12 @@
           menu2: false
       }
     },
-      filters: {
-        dateFormat: function (value) {
-            moment.locale('pt-br')
-            return moment(value).format('DD-MM-YYYY')
-          }
-      },
+    filters: {
+      dateFormat: function (value) {
+          moment.locale('pt-br')
+          return moment(value).format('DD-MM-YYYY')
+      }
+    },
     mounted(){
     },
     methods:{
@@ -247,10 +255,12 @@
             removeAllAction: 'dashboard/removeAllAction'
         }),
         openInsertModal () {
+            this.trade = Object.assign({}, this.defaultValues())
             this.modalUpdate = false
             this.dialog = true
         },
         openUpdateModal (item) {
+
             this.modalUpdate = true
             const index = this.getDashboard.trades.indexOf(item)
             this.trade = this.getDashboard.trades[index]
@@ -263,12 +273,12 @@
             confirm('Tem certeza?') && this.removeAction(index)
         },
         close () {
-            this.trade = Object.assign({}, this.defaultTrade)
+            this.trade = Object.assign({}, this.defaultValues())
             this.dialog = false
         },
         save () {
             this.insertAction(this.trade)
-            this.trade = Object.assign({}, this.defaultTrade)
+
             this.dialog = false
             this.close()
             this.modalUpdate = false
@@ -293,6 +303,14 @@
         },
         removeTrades() {
             this.removeAllAction()
+        },
+        defaultValues(){
+          return  {
+              date: new Date().toISOString().substr(0, 10),
+              payout: this.fixedPayout,
+              asset: '',
+              investiment: parseFloat(this.entry).toFixed(2),
+          }
         }
     },
     computed:{

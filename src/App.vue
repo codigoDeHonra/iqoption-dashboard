@@ -1,6 +1,6 @@
 <template>
   <v-app>
-    <v-toolbar app color="orange darken-1">
+    <v-toolbar app dark color="deep-orange darken-4">
       <v-toolbar-title class="headline text-uppercase">
         <span>IQDashboard</span>
       </v-toolbar-title>
