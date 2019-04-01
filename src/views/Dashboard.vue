@@ -109,6 +109,8 @@
                             v-model="trade.payout"
                         ></v-text-field>
                     </v-flex>
+                    <v-btn color="red darken-1" flat @click="loss()">Loss</v-btn>
+
                     <v-flex xs12 sm6 md3>
                         <v-select
                             :items="pairs"
@@ -311,6 +313,9 @@
               asset: '',
               investiment: parseFloat(this.entry).toFixed(2),
           }
+        },
+        loss(){
+            this.trade.payout = -100
         }
     },
     computed:{
