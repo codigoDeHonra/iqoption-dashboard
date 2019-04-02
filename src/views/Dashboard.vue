@@ -65,6 +65,8 @@
 
         <v-btn color="primary" dark class="mb-2" @click="openInsertModal()">Nova Negociação</v-btn>
         <v-btn color="" dark class="mb-2" @click="removeTrades()">Apagar tudo</v-btn>
+        <v-btn color="" class="mb-2" @click="insertSession()">Salvar Sessão</v-btn>
+        <v-btn color="" class="mb-2" @click="removeAllSession()">Apagar todas Sessão</v-btn>
 
         <v-dialog v-model="dialog" max-width="500px">
             <v-card>
@@ -140,6 +142,8 @@
             </v-card>
         </v-dialog>
 
+
+
         <v-data-table
             :headers="headers"
             :items="getDashboard.trades"
@@ -172,6 +176,73 @@
                 </tr>
             </template>
         </v-data-table>
+
+        <v-tabs
+            v-model="tabActive"
+            color="cyan"
+            dark
+            slider-color="yellow"
+        >
+          <v-tab
+                v-for="(n, index) in getDashboard.sessions"
+                :key="index"
+                ripple
+          >
+            Item {{ index }}
+
+          </v-tab>
+              <v-tab-item
+                v-for="(n, index) in getDashboard.sessions"
+                :key="index"
+              >
+            <v-card flat>
+
+                <v-card color="" class="">
+                    <v-card-title primary-title>
+                        <div>
+                            <div class="headline">Investimento Inicial {{n.initialInvestiment}}</div>
+                        </div>
+                    </v-card-title>
+                </v-card>
+
+                <v-data-table
+                    :headers="headers"
+                    :items="n.trades"
+                    class="elevation-1"
+                    :must-sort="true"
+                >
+                    <template  v-slot:items="props">
+                        <tr :class="[props.item.payout > 0 ? 'green': 'red', 'accent-1']">
+                            <td class="text-xs-left">{{ props.index +1}}</td>
+                            <td class="text-xs-left">{{ props.item.date | dateFormat}}</td>
+                            <td class="text-xs-left">{{ props.item.asset }}</td>
+                            <td class="text-xs-right">{{ props.item.investiment }}</td>
+                            <td class="text-xs-right">{{ props.item.payout }}</td>
+                            <td class="justify-center ">{{ total(props.item).toFixed(2) }}</td>
+                            <td class="justify-center layout px-0">
+                                <v-icon
+                                    small
+                                    class="mr-2"
+                                    @click="openUpdateModal(props.item)"
+                                >
+                                    edit
+                                </v-icon>
+                                <v-icon
+                                    small
+                                    @click="deleteItem(props.item)"
+                                >
+                                    delete
+                                </v-icon>
+                            </td>
+                        </tr>
+                    </template>
+                </v-data-table>
+
+
+            </v-card>
+              </v-tab-item>
+         </v-tabs>
+
         </v-container>
     </div>
 </template>
@@ -189,6 +260,7 @@
           initialInvestiment: 100.0,
           dialog: false,
           modalUpdate: false,
+          tabActive: null,
           headers:[
               {
                   text: '#',
@@ -254,7 +326,9 @@
             removeAction: 'dashboard/removeAction',
             updateAction: 'dashboard/updateAction',
             insertAction: 'dashboard/insertAction',
-            removeAllAction: 'dashboard/removeAllAction'
+            removeAllAction: 'dashboard/removeAllAction',
+            insertSessionAction: 'dashboard/insertSessionAction',
+            removeAllSessionAction: 'dashboard/removeAllSessionAction'
         }),
         openInsertModal () {
             this.trade = Object.assign({}, this.defaultValues())
@@ -314,8 +388,20 @@
               investiment: parseFloat(this.entry).toFixed(2),
           }
         },
-        loss(){
+        loss() {
             this.trade.payout = -100
+        },
+        insertSession() {
+            let session = {
+                trades: this.getDashboard.trades,
+                initialInvestiment: this.initialInvestiment,
+                currentInvestiment: this.currentInvestiment
+            }
+
+            this.insertSessionAction(session);
+        },
+        removeAllSession(){
+            this.removeAllSessionAction()
         }
     },
     computed:{

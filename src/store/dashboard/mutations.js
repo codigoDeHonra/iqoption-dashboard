@@ -5,7 +5,7 @@ export const state = {
     dashboard: {
         banca:{
             total: 1000,
-        } ,
+        },
         trades:[
             // {
             //     date: '2018-01-01',
@@ -65,6 +65,7 @@ export const state = {
             }
         ],
         strategy:{ entry: 5 },
+        sessions: [],
         meta:{
         }
     }
@@ -80,7 +81,16 @@ export const mutations = {
   [types.REMOVE_TRADE] (state, params) {
     vue.delete(state.dashboard.trades, params)
   },
-  [types.REMOVE_ALL_TRADES] (state, params) {
+  [types.REMOVE_ALL_TRADES] (state) {
     vue.set(state.dashboard, 'trades', [])
+  },
+  [types.INSERT_SESSION] (state, params) {
+    let data = state.dashboard.sessions
+    data.push(params)
+
+    vue.set(state.dashboard, 'sessions', data)
+  },
+  [types.REMOVE_ALL_SESSION] (state) {
+    vue.set(state.dashboard, 'sessions', [])
   }
 }

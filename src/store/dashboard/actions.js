@@ -19,3 +19,11 @@ export const removeAllAction = ({ commit }) => {
   commit(types.REMOVE_ALL_TRADES)
 }
 
+export const insertSessionAction = ({ commit }, params) => {
+  commit(types.INSERT_SESSION, params)
+}
+
+export const removeAllSessionAction = ({ commit }) => {
+  commit(types.REMOVE_ALL_SESSION)
+}
+
