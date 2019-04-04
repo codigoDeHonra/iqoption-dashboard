@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: iqoption-dashboard-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: iqoption
+      tier: frontend
+  template:
+    metadata:
+      labels:
+        app: iqoption
+        tier: frontend
+    spec:
+      containers:
+        - name: iqoption
+          image: wouerner/iqoption-dashboard:latest
+          ports:
+            - containerPort: 80
