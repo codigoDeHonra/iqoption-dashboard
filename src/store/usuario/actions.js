@@ -1,10 +1,9 @@
-// import * as avaliacaoResultadosHelperAPI from '@/helpers/api/AvaliacaoResultados';
-import * as types from './types'
+import * as types from './types';
 
-export const dadosMenu = ({ commit }) => {
- 	commit(types.SET_REGISTROS_TABELA, {})
-}
+export const  setUsuarioAction = ({ commit }, params) => {
+    commit(types.SET_USUARIO, params);
+};
 
-export const usuario = ({ commit }, params) => {
-  commit(types.SET_USUARIO, params)
-}
+export const  removeUsuarioAction = ({ commit }) => {
+    commit(types.REMOVE_USUARIO, {});
+};

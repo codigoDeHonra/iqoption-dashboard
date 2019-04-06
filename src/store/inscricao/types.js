@@ -1,0 +1,2 @@
+export const SET_INSCRICAO = 'SET_INSCRICAO';
+export const SET_INSCRICOES = 'SET_INSCRICOES';

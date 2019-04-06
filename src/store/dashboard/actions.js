@@ -1,3 +1,4 @@
+import * as API from '@/api/http'
 import * as types from './types'
 
 export const eventos = ({ commit }, params) => {
@@ -6,6 +7,20 @@ export const eventos = ({ commit }, params) => {
 
 export const insertAction = ({ commit }, params) => {
   commit(types.INSERT_TRADE, params)
+
+
+    API.dashboard()
+        .then((response) => {
+            const data = response.data;
+
+            commit(types.SET_DASHBOARD, data);
+        })
+        .catch((r)=>{
+            console.log('teste', r);
+
+        });
+
+
 }
 
 export const updateAction = ({ commit }, params) => {
