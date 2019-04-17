@@ -1,26 +1,34 @@
-import * as API from '@/api/http'
+// import * as API from '@/api/http'
+import * as trade from '@/api/trade'
 import * as types from './types'
 
 export const eventos = ({ commit }, params) => {
   commit(types.SET_EVENTO, params)
 }
+export const syncTradesAction = ({ commit }) => {
 
-export const insertAction = ({ commit }, params) => {
-  commit(types.INSERT_TRADE, params)
-
-
-    API.dashboard()
+    trade.sync()
         .then((response) => {
-            const data = response.data;
+            const { data } = response;
 
-            commit(types.SET_DASHBOARD, data);
+            commit(types.SYNC_TRADES, data);
         })
         .catch((r)=>{
             console.log('teste', r);
-
         });
+}
 
+export const insertAction = ({ commit }, params) => {
 
+    trade.insert(params)
+        .then((response) => {
+            const data = response.data;
+
+            commit(types.INSERT_TRADE, params);
+        })
+        .catch((r)=>{
+            console.log('teste', r);
+        });
 }
 
 export const updateAction = ({ commit }, params) => {
@@ -28,7 +36,15 @@ export const updateAction = ({ commit }, params) => {
 }
 
 export const removeAction = ({ commit }, params) => {
-  commit(types.REMOVE_TRADE, params)
+    trade.remove(params._id)
+        .then((response) => {
+            const { data } = response
+              commit(types.REMOVE_TRADE, params)
+        })
+        .catch((r)=>{
+            console.log('teste', r);
+        });
+
 }
 export const removeAllAction = ({ commit }) => {
   commit(types.REMOVE_ALL_TRADES)

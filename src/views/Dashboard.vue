@@ -319,10 +319,14 @@
           return moment(value).format('DD-MM-YYYY')
       }
     },
+  created(){
+      this.syncTradesAction()
+  },
     mounted(){
     },
     methods:{
         ...mapActions({
+            syncTradesAction: 'dashboard/syncTradesAction',
             removeAction: 'dashboard/removeAction',
             updateAction: 'dashboard/updateAction',
             insertAction: 'dashboard/insertAction',
@@ -346,7 +350,9 @@
         },
         deleteItem (item) {
             const index = this.getDashboard.trades.indexOf(item)
-            confirm('Tem certeza?') && this.removeAction(index)
+            // console.log(item)
+            item.index = index
+            confirm('Tem certeza?') && this.removeAction(item)
         },
         close () {
             this.trade = Object.assign({}, this.defaultValues())

@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
     const API_ENDPOINT = process.env.API === 'test' ? test.API_ENDPOINT : '';
 
     instance = axios.create({
-        baseURL: API_ENDPOINT,
+        baseURL: 'http://localhost:8081',
     });
 } else {
     instance = axios.create({
@@ -25,12 +25,12 @@ if (process.env.NODE_ENV !== 'production') {
     });
 }
 
-export const getRequest = (path, queryParams = '') => instance.get(`${path}${queryParams}`);
+export const get = (path, queryParams = '') => instance.get(`${path}${queryParams}`)
 
-export const postRequest = (path, data) => instance.post(path, data);
+export const post = (path, data) => instance.post(path, data)
 
-export const putRequest = (path, bodyFormData, id) => instance.post(`${path}/${id}`, bodyFormData);
+export const put = (path, bodyFormData, id) => instance.post(`${path}/${id}`, bodyFormData)
 
-export const deleteRequest = (path, id) => instance.delete(`${path}/${id}`);
+export const del = (path, id) => instance.delete(`${path}/${id}`)
 
 export const HTTP = config => axios.create(config);
