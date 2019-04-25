@@ -1,2 +1,5 @@
 export const SET_USUARIO = 'SET_USUARIO';
 export const REMOVE_USUARIO = 'REMOVE_USUARIO';
+export const SET_USUARIO_LOGIN = 'SET_USUARIO_LOGIN';
+export const SYNC_USUARIO = 'SYNC_USUARIO';
+

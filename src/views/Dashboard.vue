@@ -142,8 +142,6 @@
             </v-card>
         </v-dialog>
 
-
-
         <v-data-table
             :headers="headers"
             :items="getDashboard.trades"
@@ -359,6 +357,8 @@
             this.dialog = false
         },
         save () {
+
+            this.trade.usuarioId = this.getUsuario._id,
             this.insertAction(this.trade)
 
             this.dialog = false
@@ -413,6 +413,7 @@
     computed:{
         ...mapGetters({
             getDashboard: 'dashboard/getDashboard',
+            getUsuario: 'usuario/usuarioGetter',
         }),
         currentInvestiment(){
             return this.pnl() + parseFloat(this.initialInvestiment)

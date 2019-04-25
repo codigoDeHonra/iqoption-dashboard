@@ -5,9 +5,11 @@ import * as types from './types'
 export const eventos = ({ commit }, params) => {
   commit(types.SET_EVENTO, params)
 }
-export const syncTradesAction = ({ commit }) => {
+export const syncTradesAction = ({ commit, state, rootState }) => {
 
-    trade.sync()
+console.log(rootState.usuario.usuario._id)
+
+    trade.sync('/' + rootState.usuario.usuario._id)
         .then((response) => {
             const { data } = response;
 
@@ -32,7 +34,14 @@ export const insertAction = ({ commit }, params) => {
 }
 
 export const updateAction = ({ commit }, params) => {
-  commit(types.UPDATE_TRADE, params)
+    trade.update(params)
+        .then((response) => {
+            const { data } = response
+            commit(types.UPDATE_TRADE, params)
+        })
+        .catch((r)=>{
+            console.log('teste', r);
+        });
 }
 
 export const removeAction = ({ commit }, params) => {

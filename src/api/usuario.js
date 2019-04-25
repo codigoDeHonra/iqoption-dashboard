@@ -1,8 +1,10 @@
 import * as http from './http';
 
-export const sync = (data) => http.get('/trades', data);
+export const sync = () => http.get('/trades');
 
 export const insert = (data) => http.post('/trade', data);
+
+export const login = (data) => http.post('/auth/login', data);
 
 export const remove = (data) => http.del(`/trade`, data);
 

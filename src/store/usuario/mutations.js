@@ -7,8 +7,16 @@ export const state = {
 export const mutations = {
     [types.SET_USUARIO](state, params) {
         state.usuario = params
+        localStorage.setItem('user', JSON.stringify(params));
     },
     [types.REMOVE_USUARIO](state) {
         state.usuario = {}
+    },
+    [types.SET_USUARIO_LOGIN](state, params) {
+        state.usuario = params
+        localStorage.setItem('user', JSON.stringify(params));
+    },
+    [types.SYNC_USUARIO](state) {
+        state.usuario = JSON.parse(localStorage.getItem('user'));
     },
 };

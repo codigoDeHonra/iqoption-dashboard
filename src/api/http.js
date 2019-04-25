@@ -29,7 +29,7 @@ export const get = (path, queryParams = '') => instance.get(`${path}${queryParam
 
 export const post = (path, data) => instance.post(path, data)
 
-export const put = (path, bodyFormData, id) => instance.post(`${path}/${id}`, bodyFormData)
+export const put = (path, bodyFormData, id) => instance.put(`${path}/${id}`, bodyFormData)
 
 export const del = (path, id) => instance.delete(`${path}/${id}`)
 

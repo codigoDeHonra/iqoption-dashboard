@@ -5,6 +5,8 @@
         <span>IQDashboard</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
+
+      {{usuario.email}}
     </v-toolbar>
     <v-content>
         <v-container
@@ -19,17 +21,36 @@
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld'
+
+import { mapActions, mapGetters } from 'vuex';
 
 export default {
   name: 'App',
-  components: {
-    HelloWorld
-  },
   data () {
-    return {
-      //
+    return { 
+       // usuario: {}
     }
-  }
+  },
+    created() {
+        this.syncUsuarioAction()
+    },
+    computed: {
+        ...mapGetters({
+            getUsuario: 'usuario/usuarioGetter',
+        }),
+        usuario(){
+            return this.getUsuario && Object.keys(this.getUsuario).length > 0 ? this.getUsuario : {};
+        }
+    },
+    methods:{
+        ...mapActions({
+            syncUsuarioAction: 'usuario/syncUsuarioAction',
+        }),
+    },
+    // watch:{
+    //     getUsuario(){
+    //         this.usuario = Object.keys(this.getUsuario).lenth > 0 ? this.getUsuario : {};
+    //     }
+    // }
 }
 </script>

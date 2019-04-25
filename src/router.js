@@ -1,31 +1,47 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
 
 Vue.use(Router)
 
-export default new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'home',
-      component: Home
-    },
-    {
-      path: '/about',
-      name: 'about',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/About.vue')
-    },
+const routes = [
     {
       path: '/dashboard',
       name: 'dashboard',
-      // route level code-splitting
-      // this generates a separate chunk (about.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "about" */ './views/Dashboard.vue')
+      component: () => import(/* webpackChunkName: "Dashboard" */ './views/Dashboard.vue')
+    },
+    {
+      path: '/',
+      name: 'login',
+      component: () => import(/* webpackChunkName: "Login" */ './views/Login.vue')
     }
   ]
-})
+
+const router = new Router({ routes });
+
+// router.beforeEach(function(to, from, next) {
+//     const store = JSON.parse(localStorage.getItem('user'))
+
+//     if (store) {
+//         console.log('/')
+//         next()
+//     }
+
+//     // const usuario = (router.app.$store.state.usuario.usuario)
+//     // console.log(usuario)
+
+//     // // if (
+//     // //     (
+//     // //         to.name == 'Eventos' ||
+//     // //         to.name == 'Inscricao' ||
+//     // //         to.name == 'Eventos'
+//     // //     )
+//     // //     && Object.keys(usuario).length == 0
+//     // // ) {
+//     // //     next('/login')
+//     // // } else {
+//          // next()
+//     // // }
+
+// });
+
+export default router;
