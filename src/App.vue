@@ -17,6 +17,16 @@
                 </v-fade-transition>
         </v-container>
     </v-content>
+    <v-snackbar
+        v-model="snackbar"
+        :color="getSnackbar.color"
+        :top="true"
+        :left="true"
+        :timeout="2000"
+        @input="fecharSnackbar"
+    >
+        {{ getSnackbar.text }}
+    </v-snackbar>
   </v-app>
 </template>
 
@@ -29,6 +39,7 @@ export default {
   data () {
     return { 
        // usuario: {}
+        snackbar: false
     }
   },
     created() {
@@ -37,6 +48,7 @@ export default {
     computed: {
         ...mapGetters({
             getUsuario: 'usuario/usuarioGetter',
+            getSnackbar: 'noticias/getDados',
         }),
         usuario(){
             return this.getUsuario && Object.keys(this.getUsuario).length > 0 ? this.getUsuario : {};
@@ -45,6 +57,7 @@ export default {
     methods:{
         ...mapActions({
             syncUsuarioAction: 'usuario/syncUsuarioAction',
+            setSnackbar: 'noticias/setDados',
         }),
     },
     // watch:{
@@ -52,5 +65,10 @@ export default {
     //         this.usuario = Object.keys(this.getUsuario).lenth > 0 ? this.getUsuario : {};
     //     }
     // }
+    watch: {
+        getSnackbar(val) {
+            this.snackbar = val.ativo;
+        },
+    },
 }
 </script>

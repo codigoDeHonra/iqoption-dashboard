@@ -8,10 +8,22 @@ export const  setUserLoginAction = ({ commit }, params) => {
         .then((response) => {
             const { data } = response
             commit(types.SET_USUARIO_LOGIN, data)
+            commit('noticias/SET_DADOS', {
+                ativo: true,
+                color: 'green',
+                text: 'Bem vindo!',
+            },
+            { root: true });
             router.push('/dashboard')
         })
         .catch((r)=> {
             console.log('teste', r)
+            commit('noticias/SET_DADOS', {
+                ativo: true,
+                color: 'red',
+                text: 'Erro ao tentar efetur login!',
+            },
+            { root: true });
         });
 };
 

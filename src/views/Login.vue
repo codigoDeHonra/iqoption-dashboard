@@ -55,16 +55,6 @@
                                         Entrar
                                     </v-btn>
                                 </v-layout>
-                                <v-layout justify-space-between>
-                                    <v-btn
-                                        outline
-                                        color="orange darken-1"
-                                        block
-                                        href="/autenticacao/index/cadastrarusuario"
-                                    >
-                                        Cadastra-se
-                                    </v-btn>
-                                </v-layout>
                             </v-form>
                         </div>
                     </v-card-text>
