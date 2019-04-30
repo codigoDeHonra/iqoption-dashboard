@@ -14,8 +14,6 @@ axios.interceptors.request.use((config) => {
 let instance = {};
 /* global test */
 if (process.env.NODE_ENV !== 'production') {
-    const API_ENDPOINT = process.env.API === 'test' ? test.API_ENDPOINT : '';
-
     instance = axios.create({
         baseURL: process.env.VUE_APP_API,
     });
@@ -24,6 +22,7 @@ if (process.env.NODE_ENV !== 'production') {
         baseURL: process.env.VUE_APP_API,
     });
 }
+console.log(process.env.VUE_APP_API)
 
 export const get = (path, queryParams = '') => instance.get(`${path}${queryParams}`)
 
