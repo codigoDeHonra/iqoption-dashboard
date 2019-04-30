@@ -22,3 +22,5 @@ services:
       sh -c 'npm run serve'
     ports:
       - "8080:8080"
+    environment:
+      - VUE_APP_API=http://localhost:8081

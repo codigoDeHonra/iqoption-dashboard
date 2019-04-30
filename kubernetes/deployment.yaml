@@ -19,3 +19,6 @@ spec:
           image: wouerner/iqoption-dashboard:latest
           ports:
             - containerPort: 80
+          env:
+          - name: VUE_APP_API
+            value: "http://localhost:8081"

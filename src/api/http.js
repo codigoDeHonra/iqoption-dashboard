@@ -17,7 +17,7 @@ if (process.env.NODE_ENV !== 'production') {
     const API_ENDPOINT = process.env.API === 'test' ? test.API_ENDPOINT : '';
 
     instance = axios.create({
-        baseURL: 'http://localhost:8081',
+        baseURL: process.env.VUE_APP_API,
     });
 } else {
     instance = axios.create({
