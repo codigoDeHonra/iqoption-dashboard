@@ -21,7 +21,7 @@ if (process.env.NODE_ENV !== 'production') {
     });
 } else {
     instance = axios.create({
-        baseURL: '',
+        baseURL: process.env.VUE_APP_API,
     });
 }
 

@@ -21,4 +21,4 @@ spec:
             - containerPort: 80
           env:
           - name: VUE_APP_API
-            value: "http://localhost:8081"
+            value: "http://servico-ioption-nginx:8081"
