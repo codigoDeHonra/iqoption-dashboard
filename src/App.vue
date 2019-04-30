@@ -2,7 +2,7 @@
   <v-app>
     <v-toolbar app dark color="deep-orange darken-4">
       <v-toolbar-title class="headline text-uppercase">
-        <span>IQDashboard</span>
+          <span>{{app}}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
@@ -39,7 +39,8 @@ export default {
   data () {
     return { 
        // usuario: {}
-        snackbar: false
+        snackbar: false,
+        app: process.env.VUE_APP_NAME
     }
   },
     created() {
