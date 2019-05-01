@@ -24,3 +24,4 @@ spec:
             value: "http://servico-ioption-nginx:8081"
           - name: VUE_APP_NAME
             value: "Score.trade"
+          imagePullPolicy: Always
