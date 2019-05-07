@@ -147,6 +147,7 @@
             :items="getDashboard.trades"
             class="elevation-1"
             :must-sort="true"
+            :pagination.sync="pagination"
         >
             <template  v-slot:items="props">
                 <tr :class="[props.item.payout > 0 ? 'green': 'red', 'accent-1']">
@@ -208,6 +209,7 @@
                     :items="n.trades"
                     class="elevation-1"
                     :must-sort="true"
+                    :rows-per-page="25"
                 >
                     <template  v-slot:items="props">
                         <tr :class="[props.item.payout > 0 ? 'green': 'red', 'accent-1']">
@@ -253,6 +255,7 @@
     name: 'Dashboard',
     data(){
       return {
+          pagination: { rowsPerPage: 10 },
           fixedPayout: 0.0,
           fixedInvestiment: 2,
           initialInvestiment: 100.0,

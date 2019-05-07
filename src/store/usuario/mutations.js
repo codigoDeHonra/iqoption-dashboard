@@ -9,6 +9,9 @@ export const mutations = {
         state.usuario = params
         localStorage.setItem('user', JSON.stringify(params));
     },
+    [types.INSERT_USUARIO](state, params) {
+        // state.usuario = params
+    },
     [types.REMOVE_USUARIO](state) {
         state.usuario = {}
     },

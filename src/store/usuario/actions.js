@@ -27,6 +27,29 @@ export const  setUserLoginAction = ({ commit }, params) => {
         });
 };
 
+export const  insertUserAction = ({ commit }, params) => {
+
+    usuario.insert(params)
+        .then((response) => {
+            const { data } = response
+            commit(types.INSERT_USUARIO, data)
+            commit('noticias/SET_DADOS', {
+                ativo: true,
+                color: 'green',
+                text: 'Salvo!',
+            },
+            { root: true });
+        })
+        .catch((r)=> {
+            commit('noticias/SET_DADOS', {
+                ativo: true,
+                color: 'red',
+                text: 'Erro',
+            },
+            { root: true });
+        });
+};
+
 export const  setUsuarioAction = ({ commit }, params) => {
     commit(types.SET_USUARIO, params);
 };
