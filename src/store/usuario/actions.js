@@ -59,5 +59,6 @@ export const  syncUsuarioAction = ({ commit }, params) => {
 };
 
 export const  removeUsuarioAction = ({ commit }) => {
-    commit(types.REMOVE_USUARIO, {});
+    commit(types.REMOVE_USUARIO);
+    router.push('/')
 };

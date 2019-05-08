@@ -52,7 +52,7 @@
                 </v-card>
             </v-flex>
             <v-flex>
-                <v-card :color="(pnl() >= 0) ? 'green accent-1' : 'red accent-1'">
+                <v-card :color="(pnl() >= 0) ? 'green lighten-5' : 'red lighten-5'">
                     <v-card-title primary-title>
                         <div>
                             <div class="headline">Ganhos/Perdas</div>
@@ -65,8 +65,8 @@
 
         <v-btn color="primary" dark class="mb-2" @click="openInsertModal()">Nova Negociação</v-btn>
         <v-btn color="" dark class="mb-2" @click="removeTrades()">Apagar tudo</v-btn>
-        <v-btn color="" class="mb-2" @click="insertSession()">Salvar Sessão</v-btn>
-        <v-btn color="" class="mb-2" @click="removeAllSession()">Apagar todas Sessão</v-btn>
+        <v-btn v-if="false" color="" class="mb-2" @click="insertSession()">Salvar Sessão</v-btn>
+        <v-btn v-if="false" color="" class="mb-2" @click="removeAllSession()">Apagar todas Sessão</v-btn>
 
         <v-dialog v-model="dialog" max-width="500px">
             <v-card>
@@ -150,13 +150,15 @@
             :pagination.sync="pagination"
         >
             <template  v-slot:items="props">
-                <tr :class="[props.item.payout > 0 ? 'green': 'red', 'accent-1']">
+                <tr >
                     <td class="text-xs-left">{{ props.index +1}}</td>
                     <td class="text-xs-left">{{ props.item.date | dateFormat}}</td>
                     <td class="text-xs-left">{{ props.item.asset }}</td>
                     <td class="text-xs-right">{{ props.item.investiment }}</td>
                     <td class="text-xs-right">{{ props.item.payout }}</td>
-                    <td class="justify-center ">{{ total(props.item).toFixed(2) }}</td>
+                    <td :class="[props.item.payout > 0 ? 'green': 'red', 'lighten-5 justify-center']">
+                        {{ total(props.item).toFixed(2) }}
+                    </td>
                     <td class="justify-center layout px-0">
                         <v-icon
                             small
@@ -177,6 +179,8 @@
         </v-data-table>
 
         <v-tabs
+
+                    v-if="false"
             v-model="tabActive"
             color="cyan"
             dark
@@ -269,28 +273,32 @@
                   align: 'left'
               },
               {
-                  text: 'data',
+                  text: 'Data',
                   value: 'date',
                   sortable: true
               },
               {
-                  text: 'asset',
+                  text: 'Asset',
                   value: 'asset',
+                  align: 'left',
                   sortable: false
               },
               {
-                  text: 'invesment',
+                  text: 'Investimento',
                   value: 'invesment',
+                  align: 'right',
                   sortable: false
               },
               {
                   text: 'payout',
                   value: 'payout',
+                  align: 'right',
                   sortable: false
               },
               {
-                  text: 'total',
+                  text: 'Ganho/Perda',
                   value: 'total',
+                  align: 'center',
                   sortable: false
               },
           ],

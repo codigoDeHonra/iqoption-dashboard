@@ -30,8 +30,8 @@
                                     v-model="email"
                                     required
                                     box
-                                    prepend-icon="account_circle"
-                                    label="Usuário"
+                                    prepend-icon="email"
+                                    label="E-mail"
                                 />
                                 <v-text-field
                                     v-model="password"
@@ -47,7 +47,7 @@
                                 <v-layout justify-space-between>
                                     <v-btn
                                         :class=" { 'green darken-4 white--text' : valid, disabled: !valid }"
-                                        color="teal lighten-1"
+                                        color="blue darken-4"
                                         dark
                                         block
                                         @click="submit()"

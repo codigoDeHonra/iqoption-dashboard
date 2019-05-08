@@ -14,6 +14,8 @@ export const mutations = {
     },
     [types.REMOVE_USUARIO](state) {
         state.usuario = {}
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
     },
     [types.SET_USUARIO_LOGIN](state, params) {
         state.usuario = params

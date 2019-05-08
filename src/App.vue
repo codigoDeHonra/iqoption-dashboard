@@ -1,12 +1,17 @@
 <template>
   <v-app>
-    <v-toolbar app dark color="deep-orange darken-4">
+    <v-toolbar app dark color="blue darken-4">
       <v-toolbar-title class="headline text-uppercase">
           <span>{{app}}</span>
       </v-toolbar-title>
       <v-spacer></v-spacer>
 
       {{usuario.email}}
+      <v-toolbar-items
+          v-if="usuario.email"
+          class="hidden-sm-and-down">
+          <v-btn @click="logoff()" flat>sair</v-btn>
+      </v-toolbar-items>
     </v-toolbar>
     <v-content>
         <v-container
@@ -58,8 +63,12 @@ export default {
     methods:{
         ...mapActions({
             syncUsuarioAction: 'usuario/syncUsuarioAction',
+            removeUsuarioAction: 'usuario/removeUsuarioAction',
             setSnackbar: 'noticias/setDados',
         }),
+        logoff(){
+            this.removeUsuarioAction()
+        }
     },
     // watch:{
     //     getUsuario(){
