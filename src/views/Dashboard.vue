@@ -88,19 +88,17 @@
                             full-width
                         >
                             <template v-slot:activator="{ on }">
-                                <v-text-field
-                                    label="Data"
-                                    readonly
-                                    v-on="on"
-                                    box
-                                    v-model="trade.date"
-                                ></v-text-field>
+                                <v-flex xs12 sm6 md3>
+                                    <v-text-field
+                                        v-model="computedDateFormatted"
+                                        label="Data"
+                                        readonly
+                                        v-on="on"
+                                        box
+                                    ></v-text-field>
+                                </v-flex>
                             </template>
-                            <v-date-picker v-model="trade.date" no-title scrollable>
-                                <v-spacer></v-spacer>
-                                <v-btn flat color="primary" @click="menu = false">Cancel</v-btn>
-                                <v-btn flat color="primary" @click="$refs.menu.save(trade.date)">OK</v-btn>
-                            </v-date-picker>
+                            <v-date-picker v-model="date" no-title scrollable @input="menu = false"></v-date-picker>
                         </v-menu>
                     </v-layout>
                     <v-flex xs12 sm6 md3>
@@ -111,7 +109,6 @@
                             v-model="trade.payout"
                         ></v-text-field>
                     </v-flex>
-                    <v-btn color="red darken-1" flat @click="loss()">Loss</v-btn>
 
                     <v-flex xs12 sm6 md3>
                         <v-select
@@ -129,6 +126,7 @@
                             v-model="trade.investiment"
                         ></v-text-field>
                     </v-flex>
+                    <v-btn color="red darken-1" flat @click="loss()">Loss</v-btn>
 
                     {{total(trade).toFixed(2) }}
                 </v-card-text>
@@ -254,11 +252,13 @@
 <script>
   import { mapActions, mapGetters } from 'vuex';
   import moment from 'moment';
+  import vue from 'vue';
 
   export default {
     name: 'Dashboard',
     data(){
       return {
+          date:'',
           pagination: { rowsPerPage: 10 },
           fixedPayout: 0.0,
           fixedInvestiment: 2,
@@ -305,6 +305,7 @@
           editedIndex: -1,
           trade: {
               date: new Date().toISOString().substr(0, 10),
+              dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
               payout: 0,
               asset: '',
               investiment: 0,
@@ -314,8 +315,9 @@
               payout: this.fixedPayout,
               asset: '',
               investiment: this.entry,
+              dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
           },
-          pairs:['EUR/USD', 'USD/CHF'],
+          pairs:['EUR/USD', 'USD/CHF', 'AUD/CAD', 'USD/JPY', 'GBP/USD'],
           date: new Date().toISOString().substr(0, 10),
           menu: false,
           modal: false,
@@ -328,10 +330,23 @@
           return moment(value).format('DD-MM-YYYY')
       }
     },
-  created(){
+    created(){
       this.syncTradesAction()
-  },
-    mounted(){
+    },
+    computed:{
+        ...mapGetters({
+            getDashboard: 'dashboard/getDashboard',
+            getUsuario: 'usuario/usuarioGetter',
+        }),
+        currentInvestiment(){
+            return this.pnl() + parseFloat(this.initialInvestiment)
+        },
+        entry(){
+            return this.initialInvestiment * (this.fixedInvestiment/100)
+        },
+        computedDateFormatted () {
+            return this.formatDate(this.date)
+        }
     },
     methods:{
         ...mapActions({
@@ -370,6 +385,7 @@
         save () {
 
             this.trade.usuarioId = this.getUsuario._id,
+            this.trade.date = this.date,
             this.insertAction(this.trade)
 
             this.dialog = false
@@ -403,6 +419,7 @@
               payout: this.fixedPayout,
               asset: '',
               investiment: parseFloat(this.entry).toFixed(2),
+              dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
           }
         },
         loss() {
@@ -419,19 +436,27 @@
         },
         removeAllSession(){
             this.removeAllSessionAction()
-        }
-    },
-    computed:{
-        ...mapGetters({
-            getDashboard: 'dashboard/getDashboard',
-            getUsuario: 'usuario/usuarioGetter',
-        }),
-        currentInvestiment(){
-            return this.pnl() + parseFloat(this.initialInvestiment)
         },
-        entry(){
-            return this.initialInvestiment * (this.fixedInvestiment/100)
-        }
+        formatDate (date) {
+            if (!date) return null
+
+            const [year, month, day] = date.split('-')
+            return `${day}/${month}/${year}`
+        },
+        parseDate (date) {
+            if (!date) return null
+
+            const [month, day, year] = date.split('/')
+            return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+        },
+    },
+    watch: {
+      date(val) {
+         const t = Object.assign({}, this.trade);
+         t.date = val
+
+         vue.set(this, 'trade', t)
+      },
     }
   }
 </script>
