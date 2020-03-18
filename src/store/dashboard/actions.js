@@ -34,10 +34,11 @@ export const insertAction = ({ commit }, params) => {
 }
 
 export const updateAction = ({ commit }, params) => {
+    console.log(params)
     trade.update(params)
         .then((response) => {
             const { data } = response
-            commit(types.UPDATE_TRADE, params)
+            commit(types.UPDATE_CATEGORY, params)
         })
         .catch((r)=>{
             console.log('teste', r);

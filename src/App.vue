@@ -4,8 +4,8 @@
       <v-toolbar-title class="headline text-uppercase">
           <span>{{app}}</span>
       </v-toolbar-title>
+      <v-btn to="/categoria" text small color="primary">Categoria</v-btn>
       <v-spacer></v-spacer>
-
       {{usuario.email}}
       <v-toolbar-items
           v-if="usuario.email"
@@ -17,9 +17,9 @@
         <v-container
             fluid
         >
-                <v-fade-transition mode="out-in">
-                    <router-view/>
-                </v-fade-transition>
+            <v-fade-transition mode="out-in">
+                <router-view/>
+            </v-fade-transition>
         </v-container>
     </v-content>
     <v-snackbar

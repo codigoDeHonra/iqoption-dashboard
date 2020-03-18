@@ -332,6 +332,7 @@
     },
     created(){
       this.syncTradesAction()
+      this.syncCategoryAction()
     },
     computed:{
         ...mapGetters({
@@ -356,7 +357,8 @@
             insertAction: 'dashboard/insertAction',
             removeAllAction: 'dashboard/removeAllAction',
             insertSessionAction: 'dashboard/insertSessionAction',
-            removeAllSessionAction: 'dashboard/removeAllSessionAction'
+            removeAllSessionAction: 'dashboard/removeAllSessionAction',
+            syncCategoryAction: 'category/syncAction',
         }),
         openInsertModal () {
             this.trade = Object.assign({}, this.defaultValues())
