@@ -112,7 +112,9 @@
 
                     <v-flex xs12 sm6 md3>
                         <v-select
-                            :items="pairs"
+                            :items="getCategory"
+                            item-text="name"
+                            item-value="_id"
                             box
                             label="Par de moeda"
                             v-model="trade.asset"
@@ -151,7 +153,7 @@
                 <tr >
                     <td class="text-xs-left">{{ props.index +1}}</td>
                     <td class="text-xs-left">{{ props.item.date | dateFormat}}</td>
-                    <td class="text-xs-left">{{ props.item.asset }}</td>
+                    <td class="text-xs-left">{{ categoryItem(props.item) }}</td>
                     <td class="text-xs-right">{{ props.item.investiment }}</td>
                     <td class="text-xs-right">{{ props.item.payout }}</td>
                     <td :class="[props.item.payout > 0 ? 'green': 'red', 'lighten-5 justify-center']">
@@ -177,8 +179,7 @@
         </v-data-table>
 
         <v-tabs
-
-                    v-if="false"
+            v-if="false"
             v-model="tabActive"
             color="cyan"
             dark
@@ -330,14 +331,15 @@
           return moment(value).format('DD-MM-YYYY')
       }
     },
-    created(){
-      this.syncTradesAction()
-      this.syncCategoryAction()
+    async created() {
+      await this.syncTradesAction()
+      await this.syncCategoryAction()
     },
     computed:{
         ...mapGetters({
             getDashboard: 'dashboard/getDashboard',
             getUsuario: 'usuario/usuarioGetter',
+            getCategory: 'category/categoryGetter',
         }),
         currentInvestiment(){
             return this.pnl() + parseFloat(this.initialInvestiment)
@@ -450,6 +452,14 @@
 
             const [month, day, year] = date.split('/')
             return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+        },
+        categoryItem (item) {
+            if (item){
+                const index = this.getCategory.find(function(value){
+                    return value._id == item._id  ? true : 'error'
+                })
+                return index.name
+            }
         },
     },
     watch: {
