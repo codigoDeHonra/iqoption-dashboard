@@ -1,0 +1,6 @@
+export const SET_USUARIO = 'SET_USUARIO';
+export const REMOVE_WALLET = 'REMOVE_WALLET';
+export const SET_USUARIO_LOGIN = 'SET_USUARIO_LOGIN';
+export const SYNC_WALLET = 'SYNC_WALLET';
+export const INSERT_WALLET = 'INSERT_WALLET';
+

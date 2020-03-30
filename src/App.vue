@@ -2,10 +2,44 @@
   <v-app>
     <v-toolbar app dark color="blue darken-4">
       <v-toolbar-title class="headline text-uppercase">
-          <span>{{app}}</span>
+          <v-btn to="/dashboard" link small >{{app}}</v-btn>
       </v-toolbar-title>
-      <v-btn to="/categoria" text small color="primary">Categoria</v-btn>
+      <v-btn flat to="/meus-ativos">
+          Ativo
+      </v-btn>
       <v-spacer></v-spacer>
+     <v-menu :nudge-width="100">
+        <template v-slot:activator="{ on }">
+          <v-toolbar-title v-on="on">
+            <span>Configuração</span>
+            <v-icon dark>arrow_drop_down</v-icon>
+          </v-toolbar-title>
+        </template>
+
+        <v-list>
+          <v-list-tile @click="$router.push('/categoria')">
+            <v-list-tile-title >
+               Categoria 
+            </v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="$router.push('/carteira')">
+            <v-list-tile-title >
+               Carteira 
+            </v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="$router.push('/corretora')">
+            <v-list-tile-title >
+               Corretora 
+            </v-list-tile-title>
+          </v-list-tile>
+          <v-list-tile @click="$router.push('/ativo')">
+            <v-list-tile-title >
+               Ativo
+            </v-list-tile-title>
+          </v-list-tile>
+        </v-list>
+      </v-menu> 
+
       {{usuario.email}}
       <v-toolbar-items
           v-if="usuario.email"

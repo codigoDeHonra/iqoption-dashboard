@@ -23,6 +23,26 @@ const routes = [
       path: '/categoria',
       name: 'category',
       component: () => import(/* webpackChunkName: "Cadastro" */ './views/Category.vue')
+    },
+    {
+      path: '/corretora',
+      name: 'broker',
+      component: () => import(/* webpackChunkName: "Broker" */ './views/Broker.vue')
+    },
+    {
+      path: '/ativo',
+      name: 'broker',
+      component: () => import(/* webpackChunkName: "Asset" */ './views/Asset.vue')
+    },
+    {
+      path: '/carteira',
+      name: 'carteira',
+      component: () => import(/* webpackChunkName: "Carteira" */ './views/Wallet.vue')
+    },
+    {
+      path: '/meus-ativos',
+      name: 'MyAssets',
+      component: () => import(/* webpackChunkName: "MyAssets" */ './views/MyAssets.vue')
     }
   ]
 

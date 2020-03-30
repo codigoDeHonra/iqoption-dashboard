@@ -102,6 +102,17 @@
                         </v-menu>
                     </v-layout>
                     <v-flex xs12 sm6 md3>
+                        <v-select
+                            :items="brokerGetter"
+                            item-text="name"
+                            item-value="_id"
+                            box
+                            label="Corretora"
+                            v-model="trade.broker"
+                            return-object
+                        ></v-select>
+                    </v-flex>
+                    <v-flex xs12 sm6 md3>
                         <v-text-field
                             label="Payout"
                             placeholder="82"
@@ -111,15 +122,27 @@
                     </v-flex>
 
                     <v-flex xs12 sm6 md3>
+                        <v-text-field
+                            label="Quantidade"
+                            placeholder="82"
+                            box
+                            v-model="trade.amount"
+                        ></v-text-field>
+                    </v-flex>
+
+
+                    <v-flex xs12 sm6 md3>
                         <v-select
-                            :items="getCategory"
+                            :items="getAsset"
                             item-text="name"
                             item-value="_id"
                             box
-                            label="Par de moeda"
+                            label="Ativo"
                             v-model="trade.asset"
+                            return-object
                         ></v-select>
                     </v-flex>
+
                     <v-flex xs12 sm6 md3>
                         <v-text-field
                             label="Investimento"
@@ -153,7 +176,8 @@
                 <tr >
                     <td class="text-xs-left">{{ props.index +1}}</td>
                     <td class="text-xs-left">{{ props.item.date | dateFormat}}</td>
-                    <td class="text-xs-left">{{ categoryItem(props.item) }}</td>
+                    <!--td class="text-xs-left">{{ categoryItem(props.item) }}</td-->
+                    <td class="text-xs-left">{{ props.item.asset.name }}</td>
                     <td class="text-xs-right">{{ props.item.investiment }}</td>
                     <td class="text-xs-right">{{ props.item.payout }}</td>
                     <td :class="[props.item.payout > 0 ? 'green': 'red', 'lighten-5 justify-center']">
@@ -310,6 +334,8 @@
               payout: 0,
               asset: '',
               investiment: 0,
+              broker: '',
+              amount: 0
           },
           defaultTrade: {
               date: new Date().toISOString().substr(0, 10),
@@ -317,6 +343,8 @@
               asset: '',
               investiment: this.entry,
               dateFormatted: this.formatDate(new Date().toISOString().substr(0, 10)),
+              broker: '',
+              amount: 0
           },
           pairs:['EUR/USD', 'USD/CHF', 'AUD/CAD', 'USD/JPY', 'GBP/USD'],
           date: new Date().toISOString().substr(0, 10),
@@ -334,12 +362,16 @@
     async created() {
       await this.syncTradesAction()
       await this.syncCategoryAction()
+      await this.syncBrokerAction()
+      await this.syncAssetAction()
     },
     computed:{
         ...mapGetters({
             getDashboard: 'dashboard/getDashboard',
             getUsuario: 'usuario/usuarioGetter',
             getCategory: 'category/categoryGetter',
+            brokerGetter: 'broker/brokerGetter',
+            getAsset: 'asset/assetGetter',
         }),
         currentInvestiment(){
             return this.pnl() + parseFloat(this.initialInvestiment)
@@ -361,6 +393,8 @@
             insertSessionAction: 'dashboard/insertSessionAction',
             removeAllSessionAction: 'dashboard/removeAllSessionAction',
             syncCategoryAction: 'category/syncAction',
+            syncBrokerAction: 'broker/syncAction',
+            syncAssetAction: 'asset/syncAction',
         }),
         openInsertModal () {
             this.trade = Object.assign({}, this.defaultValues())
@@ -390,6 +424,10 @@
 
             this.trade.usuarioId = this.getUsuario._id,
             this.trade.date = this.date,
+                this.trade.asset = {
+                    _id: this.trade.asset._id,
+                    name: this.trade.asset.name,
+                }
             this.insertAction(this.trade)
 
             this.dialog = false

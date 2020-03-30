@@ -1,0 +1,6 @@
+export const SET_USUARIO = 'SET_USUARIO';
+export const REMOVE_BROKER = 'REMOVE_BROKER';
+export const SET_USUARIO_LOGIN = 'SET_USUARIO_LOGIN';
+export const SYNC_BROKER = 'SYNC_BROKER';
+export const INSERT_BROKER = 'INSERT_BROKER';
+

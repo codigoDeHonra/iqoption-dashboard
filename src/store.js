@@ -5,6 +5,9 @@ import usuario from './store/usuario/index'
 import dashboard from './store/dashboard/index'
 import noticias from './store/noticias/index'
 import category from './store/category/index'
+import broker from './store/broker/index'
+import asset from './store/asset/index'
+import wallet from './store/wallet/index'
 
 Vue.use(Vuex)
 
@@ -14,7 +17,10 @@ export default new Vuex.Store({
     usuario,
     dashboard,
     noticias,
-    category
+    category,
+    broker,
+    asset,
+   wallet 
   },
   debug: true,
 })
